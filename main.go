@@ -15,9 +15,10 @@ func main() {
 	port := ":8093"
 	http.HandleFunc("/", Groupie_tracker.GetDataFromJson)
 	http.HandleFunc("/Artist/{id}", Groupie_tracker.HandlerShowRelation)
+	http.HandleFunc("/geoMap", Groupie_tracker.GeoMap)
 	http.HandleFunc("/styles/", Groupie_tracker.HandleStyle)
 	fmt.Printf("http://localhost%v", port)
-	Openbrowser("http://localhost" + port)
+	// Openbrowser("http://localhost" + port)
 	log.Fatal(http.ListenAndServe(port, nil))
 }
 

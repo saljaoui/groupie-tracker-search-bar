@@ -542,3 +542,10 @@ main {
     gap: 0;
   }
 }
+
+
+#location-info {
+  display: flex;
+  height: 200px;
+  width: 200px;
+}

@@ -45,11 +45,55 @@ navbarLinks.forEach(link => {
 });
 
 
-document.getElementById('locationSelect').addEventListener('change', function() {
-    var iframes = document.getElementsByTagName('iframe');
-    for (var i = 0; i < iframes.length; i++) {
-      iframes[i].style.display = 'none';
+// document.getElementById('locationSelect').addEventListener('change', function() {
+//     var iframes = document.getElementsByTagName('iframe');
+//     for (var i = 0; i < iframes.length; i++) {
+//       iframes[i].style.display = 'none';
+//     }
+//     var selectedIndex = this.value;
+//     document.getElementById('map' + selectedIndex).style.display = 'block';
+//   });
+async function fetchLocation(index) {
+    try {
+        const response = await fetch(`/geoMap?index=${index}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const result = await response.json();
+        // Assuming 'result' is a URL
+        const listElement = document.getElementById('location-info');
+        listElement.innerHTML = ''; // Clear any existing messages
+        
+        const iframe = document.createElement('iframe');
+        iframe.src = result; 
+        iframe.width = '600';
+        iframe.height = '450';
+        iframe.style.border = '5px'; 
+        iframe.style.display = 'none';
+        iframe.allowFullscreen = true;
+        iframe.loading = 'lazy';
+        
+        listElement.appendChild(iframe);
+        console.log(listElement);
+    } catch (error) {
+        console.error('Fetch error:', error);
+        const listElement = document.getElementById('location-info');
+        listElement.innerHTML = '<li>Error fetching location</li>';
     }
-    var selectedIndex = this.value;
-    document.getElementById('map' + selectedIndex).style.display = 'block';
-  });
+}
+
+function handleSelectChange() {
+    const selectElement = document.getElementById('locationSelect');
+    const selectedIndex = selectElement.value;
+    if (selectedIndex !== '') {
+        fetchLocation(selectedIndex);
+    } else {
+        const listElement = document.getElementById('location-info');
+        listElement.innerHTML = '<li>Select a location...</li>';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const selectElement = document.getElementById('locationSelect');
+    selectElement.addEventListener('change', handleSelectChange);
+});

@@ -107,16 +107,19 @@
                 </header>
                 <h2 class="titles">Locations</h2>
                 <section class="about-text animation">
-                    <select name="" id="locationSelect">
+                    <select id="locationSelect">
+                        <!-- Assuming you are rendering options from server-side code -->
                         {{range $index, $location := .Location}}
                           <option value="{{$index}}">{{ $location }}</option>
                         {{end}}
-                      </select>
-                      
-                      <h1>My Location on Google Maps</h1>
-                      {{range $index, $url := .Url }}
-                        <iframe id="map{{$index}}" src="{{ $url }}" width="600" height="450" style="border: 5px; display: none;" allowfullscreen="" loading="lazy"></iframe>
-                      {{end}}
+                    </select>
+                
+                    <h1>My Location on Google Maps</h1>
+                    <div id="location-info">
+                        <!-- The iframe will be dynamically inserted here -->
+                    </div>
+                       
+
                 </section>
             </article>
             <article id="relation" class="contact-artists">
