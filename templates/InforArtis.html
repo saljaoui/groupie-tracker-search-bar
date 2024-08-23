@@ -108,17 +108,15 @@
                 <h2 class="titles">Locations</h2>
                 <section class="about-text animation">
                     <select name="" id="locationSelect">
-                        {{range .Location}}
-                        <option>{{ . }}</option>
+                        {{range $index, $location := .Location}}
+                          <option value="{{$index}}">{{ $location }}</option>
                         {{end}}
-                    </select>
-
-                    <h1>My Location on Google Maps</h1>
-
-                    {{range .Url }}
-                    <iframe src="{{ . }}" width="600" height="450" style="border: 5px;" allowfullscreen="" loading="lazy">
-                    </iframe>
-                    {{end}}
+                      </select>
+                      
+                      <h1>My Location on Google Maps</h1>
+                      {{range $index, $url := .Url }}
+                        <iframe id="map{{$index}}" src="{{ $url }}" width="600" height="450" style="border: 5px; display: none;" allowfullscreen="" loading="lazy"></iframe>
+                      {{end}}
                 </section>
             </article>
             <article id="relation" class="contact-artists">

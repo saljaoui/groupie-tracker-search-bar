@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"strings"
 )
 
 // func to Get All data From json
@@ -59,7 +58,6 @@ func FetchDataRelationFromId(id string) (Artist, error) {
 	if err != nil {
 		return Artist{}, fmt.Errorf("error fetching data from locations data: %w", err)
 	}
-	fmt.Println(artist.Url)
 
 	var relation Relation
 	err = GetanyStruct(url+"/relation/"+id, &relation)
@@ -69,8 +67,7 @@ func FetchDataRelationFromId(id string) (Artist, error) {
 	artist.Location = location.Location
 	artist.Date = date.Date
 
-	artist.DatesLocations = formatLocations(relation.DatesLocations)
-	fmt.Println("ok")
+	// artist.DatesLocations = formatLocations(relation.DatesLocations)
 
 	return artist, nil
 }
@@ -106,7 +103,7 @@ func geocodeAddress(address []string) ([]string, error) {
 		if len(results) == 0 {
 			return nil, fmt.Errorf("no results found for address: %s", address)
 		}
-		result = append(result, fmt.Sprintf("https://www.google.com/maps?q=%v,%v&output=embed", results[0].Lat, results[0].Lon))
+		result = append(result, fmt.Sprintf("https://www.google.com/maps?q=%v,%v\n&output=embed", results[0].Lat, results[0].Lon))
 	}
 
 	return result, nil
@@ -129,13 +126,13 @@ func GetanyStruct(url string, result interface{}) error {
 }
 
 // func To Format String To remove '_' or '-' and Capitaliz text
-func formatLocations(locations map[string][]string) map[string][]string {
-	formatted := make(map[string][]string, len(locations))
+// func formatLocations(locations map[string][]string) map[string][]string {
+// 	formatted := make(map[string][]string, len(locations))
 
-	for location, dates := range locations {
-		formattedLoc := strings.Title(strings.NewReplacer("-", " ", "_", " ").Replace(location))
-		formatted[formattedLoc] = dates
-	}
+// 	for location, dates := range locations {
+// 		formattedLoc := strings.Title(strings.NewReplacer("-", " ", "_", " ").Replace(location))
+// 		formatted[formattedLoc] = dates
+// 	}
 
-	return formatted
-}
+// 	return formatted
+// }

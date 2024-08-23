@@ -43,3 +43,13 @@ navbarLinks.forEach(link => {
         this.style.color = '#d39c51';
     });
 });
+
+
+document.getElementById('locationSelect').addEventListener('change', function() {
+    var iframes = document.getElementsByTagName('iframe');
+    for (var i = 0; i < iframes.length; i++) {
+      iframes[i].style.display = 'none';
+    }
+    var selectedIndex = this.value;
+    document.getElementById('map' + selectedIndex).style.display = 'block';
+  });
