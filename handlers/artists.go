@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 // func to Get All data From json
@@ -67,7 +68,7 @@ func FetchDataRelationFromId(id string) (Artist, error) {
 	artist.Location = location.Location
 	artist.Date = date.Date
 
-	// artist.DatesLocations = formatLocations(relation.DatesLocations)
+	artist.DatesLocations = formatLocations(relation.DatesLocations)
 
 	return artist, nil
 }
@@ -126,13 +127,13 @@ func GetanyStruct(url string, result interface{}) error {
 }
 
 // func To Format String To remove '_' or '-' and Capitaliz text
-// func formatLocations(locations map[string][]string) map[string][]string {
-// 	formatted := make(map[string][]string, len(locations))
+func formatLocations(locations map[string][]string) map[string][]string {
+	formatted := make(map[string][]string, len(locations))
 
-// 	for location, dates := range locations {
-// 		formattedLoc := strings.Title(strings.NewReplacer("-", " ", "_", " ").Replace(location))
-// 		formatted[formattedLoc] = dates
-// 	}
+	for location, dates := range locations {
+		formattedLoc := (strings.NewReplacer("-", " ", "_", " ").Replace(location))
+		formatted[formattedLoc] = dates
+	}
 
-// 	return formatted
-// }
+	return formatted
+}

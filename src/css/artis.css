@@ -331,6 +331,7 @@ h2.titles {
   font-weight: bold;
   margin-bottom: 5px;
   color: var(--text-color);
+  text-transform: capitalize;
 }
 
 .year {
