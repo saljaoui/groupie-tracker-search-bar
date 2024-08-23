@@ -60,16 +60,14 @@ async function fetchLocation(index) {
             throw new Error('Network response was not ok');
         }
         const result = await response.json();
-        // Assuming 'result' is a URL
         const listElement = document.getElementById('location-info');
-        listElement.innerHTML = ''; // Clear any existing messages
+        listElement.innerHTML = ''; // Clear any existing content
         
         const iframe = document.createElement('iframe');
         iframe.src = result; 
         iframe.width = '600';
         iframe.height = '450';
-        iframe.style.border = '5px'; 
-        iframe.style.display = 'none';
+        iframe.style.border = '0'; // Changed from '5px' to '0'
         iframe.allowFullscreen = true;
         iframe.loading = 'lazy';
         
@@ -78,22 +76,28 @@ async function fetchLocation(index) {
     } catch (error) {
         console.error('Fetch error:', error);
         const listElement = document.getElementById('location-info');
-        listElement.innerHTML = '<li>Error fetching location</li>';
+        listElement.innerHTML = '<p>Error fetching location</p>';
     }
 }
 
 function handleSelectChange() {
     const selectElement = document.getElementById('locationSelect');
     const selectedIndex = selectElement.value;
+    const listElement = document.getElementById('location-info');
+    
     if (selectedIndex !== '') {
         fetchLocation(selectedIndex);
+        listElement.style.display = 'block'; // Show the container
     } else {
-        const listElement = document.getElementById('location-info');
-        listElement.innerHTML = '<li>Select a location...</li>';
+        listElement.innerHTML = '<p>Select a location...</p>';
+        listElement.style.display = 'none'; // Hide the container when no location is selected
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     const selectElement = document.getElementById('locationSelect');
     selectElement.addEventListener('change', handleSelectChange);
+    
+    // Initialize the view
+    handleSelectChange();
 });
