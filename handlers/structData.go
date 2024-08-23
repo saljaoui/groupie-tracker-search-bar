@@ -23,8 +23,9 @@ type Artist struct {
 	CreationDate   int                 `json:"creationDate"`
 	FirstAlbum     string              `json:"firstAlbum"`
 	Date           []string            `json:"dates"`
-	Location       []string         
-	maps		[]string
+	Location       []string
+	Url			   []string
+
 }
 
 // struct for Location jeson data 

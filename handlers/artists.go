@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
@@ -25,7 +26,7 @@ func GetArtistsDataStruct() ([]JsonData, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error fetching data from artist data: %v", err)
 	}
-	
+
 	return artistData, nil
 }
 
@@ -33,7 +34,7 @@ func GetArtistsDataStruct() ([]JsonData, error) {
 func FetchDataRelationFromId(id string) (Artist, error) {
 	url := "https://groupietrackers.herokuapp.com/api"
 	var artist Artist
-	err := GetanyStruct(url + "/artists/" + id, &artist)
+	err := GetanyStruct(url+"/artists/"+id, &artist)
 	if err != nil {
 		return Artist{}, fmt.Errorf("error fetching data from artist data: %w", err)
 	}
@@ -43,30 +44,72 @@ func FetchDataRelationFromId(id string) (Artist, error) {
 	}
 
 	var date Date
-	errdate := GetanyStruct(url + "/dates/" + id, &date)
-	if errdate != nil {
-		return Artist{}, fmt.Errorf("error fetching data from artist data: %w", errdate)
+	err = GetanyStruct(url+"/dates/"+id, &date)
+	if err != nil {
+		return Artist{}, fmt.Errorf("error fetching data from artist data: %w", err)
 	}
 
 	var location Location
-	errlocations := GetanyStruct(url + "/locations/" + id, &location)
-	if errlocations != nil {
-		return Artist{}, fmt.Errorf("error fetching data from locations data: %w", errlocations)
+	err = GetanyStruct(url+"/locations/"+id, &location)
+	if err != nil {
+		return Artist{}, fmt.Errorf("error fetching data from locations data: %w", err)
 	}
-	var relation Relation
 
-	errrelation := GetanyStruct(url + "/relation/" + id, &relation)
-	if errrelation != nil {
-		return Artist{}, fmt.Errorf("error fetching data from locations data: %w", errrelation)
+	artist.Url, err = geocodeAddress(location.Location)
+	if err != nil {
+		return Artist{}, fmt.Errorf("error fetching data from locations data: %w", err)
+	}
+	fmt.Println(artist.Url)
+
+	var relation Relation
+	err = GetanyStruct(url+"/relation/"+id, &relation)
+	if err != nil {
+		return Artist{}, fmt.Errorf("error fetching data from locations data: %w", err)
 	}
 	artist.Location = location.Location
 	artist.Date = date.Date
 
-	var maps []string
-	artist.DatesLocations , maps = formatLocations(relation.DatesLocations)
-	artist.maps = maps
+	artist.DatesLocations = formatLocations(relation.DatesLocations)
+	fmt.Println("ok")
 
 	return artist, nil
+}
+
+type GeocodeResponse struct {
+	Lat string `json:"lat"`
+	Lon string `json:"lon"`
+}
+
+func geocodeAddress(address []string) ([]string, error) {
+	var result []string
+	for _, s := range address {
+
+		encodedAddress := url.QueryEscape(s)
+		url := fmt.Sprintf("https://nominatim.openstreetmap.org/search?format=json&q=%s", encodedAddress)
+		fmt.Println(url)
+
+		resp, err := http.Get(url)
+		if err != nil {
+			return nil, err
+		}
+		defer resp.Body.Close()
+
+		if resp.StatusCode != http.StatusOK {
+			return nil, fmt.Errorf("error: %s", resp.Status)
+		}
+
+		var results []GeocodeResponse
+		err = json.NewDecoder(resp.Body).Decode(&results)
+		if err != nil {
+			return nil, fmt.Errorf("no results the error is: %s", err)
+		}
+		if len(results) == 0 {
+			return nil, fmt.Errorf("no results found for address: %s", address)
+		}
+		result = append(result, fmt.Sprintf("https://www.google.com/maps?q=%v,%v&output=embed", results[0].Lat, results[0].Lon))
+	}
+
+	return result, nil
 }
 
 // func to UnmarshalJSON from any struct with send url and any
@@ -86,12 +129,13 @@ func GetanyStruct(url string, result interface{}) error {
 }
 
 // func To Format String To remove '_' or '-' and Capitaliz text
-func formatLocations(locations map[string][]string) (map[string][]string , []string ){
+func formatLocations(locations map[string][]string) map[string][]string {
 	formatted := make(map[string][]string, len(locations))
-	var str []string
+
 	for location, dates := range locations {
 		formattedLoc := strings.Title(strings.NewReplacer("-", " ", "_", " ").Replace(location))
 		formatted[formattedLoc] = dates
 	}
-	return formatted , str
+
+	return formatted
 }

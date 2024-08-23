@@ -2,6 +2,7 @@ package Groupie_tracker
 
 import (
 	"bytes"
+	"fmt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -69,9 +70,11 @@ func HandlerShowRelation(w http.ResponseWriter, r *http.Request) {
 		HandleErrors(w, errors.NotFound, errors.DescriptionNotFound, http.StatusNotFound)
 		return
 	}
+	fmt.Println(artist)
 	var buf bytes.Buffer
 	errs := tmpl.ExecuteTemplate(&buf, "InforArtis.html", artist)
 	if errs != nil {
+		fmt.Println("this")
 		HandleErrors(w, errors.InternalError, errors.DescriptionInternalError, http.StatusInternalServerError)
 		return
 	}
