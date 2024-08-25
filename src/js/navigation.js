@@ -65,7 +65,7 @@ async function fetchLocation(index) {
         
         const iframe = document.createElement('iframe');
         iframe.src = result; 
-        iframe.width = '600';
+        iframe.width = '97%';
         iframe.height = '450';
         iframe.style.border = '0'; // Changed from '5px' to '0'
         iframe.allowFullscreen = true;

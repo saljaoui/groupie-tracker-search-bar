@@ -392,6 +392,7 @@ main {
   margin-bottom: 0;
   padding-top: 60px;
   overflow: hidden;
+  overflow-y: scroll;
 }
 
 .avatar-box img {

@@ -57,11 +57,6 @@ func FetchDataRelationFromId(id string) (Artist, error) {
 		return Artist{}, fmt.Errorf("error fetching data from locations data: %w", err)
 	}
 
-	// artist.Url, err = geocodeAddress(location.Location)
-	// if err != nil {
-	// 	return Artist{}, fmt.Errorf("error fetching data from locations data: %w", err)
-	// }
-
 	var relation Relation
 	err = GetanyStruct(url+"/relation/"+id, &relation)
 	if err != nil {
