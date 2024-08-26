@@ -33,7 +33,7 @@ func GetDataFromJson(w http.ResponseWriter, r *http.Request) {
 		HandleErrors(w, errors.NotFound, errors.DescriptionNotFound, http.StatusNotFound)
 		return
 	}
-	
+
 	artisData, errs := GetArtistsDataStruct()
 	if errs != nil {
 		HandleErrors(w, errors.BadRequest, errors.DescriptionBadRequest, http.StatusBadRequest)
