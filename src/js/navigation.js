@@ -43,25 +43,28 @@ navbarLinks.forEach(link => {
         this.style.color = '#d39c51';
     });
 });
-
 async function fetchLocation(index) {
-        const response = await fetch(`/geoMap?index=${index}`);
+    const response = await fetch(`/geoMap?index=${index}`);
 
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const result = await response.json();
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
 
+    const result = await response.json();
+    const listElement = document.getElementById('location-info');
+    listElement.innerHTML = '';
 
-        const listElement = document.getElementById('location-info');
-        listElement.innerHTML = '';
-        
-        const iframe = document.createElement('iframe');
-        iframe.src = result; 
-        iframe.width = '97%';
-        iframe.height = '450';
-        iframe.style.border = '0';
-        listElement.appendChild(iframe);
+    // Create an <a> element
+    const link = document.createElement('a');
+    link.href = result; // Set the href attribute to the URL or location you receive
+    link.textContent = 'View Location'; // Set the text or HTML content of the link
+    link.style.display = 'block'; // Optional: make the link appear as a block element
+    link.style.width = '97%'; // Optional: set width if needed
+    link.style.textAlign = 'center'; // Optional: center the text if needed
+    link.style.border = '0'; // Optional: remove border if applicable
+
+    listElement.appendChild(link);
+    console.log(link);
 }
 
 function handleSelectChange() {
