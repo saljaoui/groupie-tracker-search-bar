@@ -44,40 +44,24 @@ navbarLinks.forEach(link => {
     });
 });
 
-
-// document.getElementById('locationSelect').addEventListener('change', function() {
-//     var iframes = document.getElementsByTagName('iframe');
-//     for (var i = 0; i < iframes.length; i++) {
-//       iframes[i].style.display = 'none';
-//     }
-//     var selectedIndex = this.value;
-//     document.getElementById('map' + selectedIndex).style.display = 'block';
-//   });
 async function fetchLocation(index) {
-    try {
         const response = await fetch(`/geoMap?index=${index}`);
+
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
         const result = await response.json();
+
+
         const listElement = document.getElementById('location-info');
-        listElement.innerHTML = ''; // Clear any existing content
+        listElement.innerHTML = '';
         
         const iframe = document.createElement('iframe');
         iframe.src = result; 
         iframe.width = '97%';
         iframe.height = '450';
-        iframe.style.border = '0'; // Changed from '5px' to '0'
-        iframe.allowFullscreen = true;
-        iframe.loading = 'lazy';
-        
+        iframe.style.border = '0';
         listElement.appendChild(iframe);
-        console.log(listElement);
-    } catch (error) {
-        console.error('Fetch error:', error);
-        const listElement = document.getElementById('location-info');
-        listElement.innerHTML = '<p>Error fetching location</p>';
-    }
 }
 
 function handleSelectChange() {
@@ -87,17 +71,13 @@ function handleSelectChange() {
     
     if (selectedIndex !== '') {
         fetchLocation(selectedIndex);
-        listElement.style.display = 'block'; // Show the container
-    } else {
-        listElement.innerHTML = '<p>Select a location...</p>';
-        listElement.style.display = 'none'; // Hide the container when no location is selected
+        listElement.style.display = 'block'; 
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     const selectElement = document.getElementById('locationSelect');
     selectElement.addEventListener('change', handleSelectChange);
-    
-    // Initialize the view
+
     handleSelectChange();
 });

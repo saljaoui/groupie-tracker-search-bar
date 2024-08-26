@@ -33,13 +33,13 @@ func GetDataFromJson(w http.ResponseWriter, r *http.Request) {
 		HandleErrors(w, errors.NotFound, errors.DescriptionNotFound, http.StatusNotFound)
 		return
 	}
-	var buf bytes.Buffer
+	
 	artisData, errs := GetArtistsDataStruct()
 	if errs != nil {
 		HandleErrors(w, errors.BadRequest, errors.DescriptionBadRequest, http.StatusBadRequest)
 		return
 	}
-
+	var buf bytes.Buffer
 	err := tmpl.ExecuteTemplate(&buf, "index.html", artisData)
 	if err != nil {
 		HandleErrors(w, errors.InternalError, errors.DescriptionInternalError, http.StatusInternalServerError)
