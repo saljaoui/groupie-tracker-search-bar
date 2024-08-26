@@ -543,3 +543,6 @@ main {
     gap: 0;
   }
 }
+iframe {
+  border-radius: 15px;
+}

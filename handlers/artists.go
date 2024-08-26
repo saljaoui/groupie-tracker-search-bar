@@ -124,7 +124,8 @@ func geocodeAddress(address string) (string, error) {
 	if len(results) == 0 {
 		return "", fmt.Errorf("no results found for address: %s", address)
 	}
-	result = fmt.Sprintf("https://www.google.com/maps?q=%v,%v&output=embed", results[0].Lat, results[0].Lon)
+
+	result = fmt.Sprintf("https://www.google.com/maps/@%v,%v,7778m/data=!3m1!1e3?entry=ttu&g_ep=EgoyMDI0MDgyMS4wIKXMDSoASAFQAw%3D%3D", results[0].Lat, results[0].Lon)
 
 	return result, nil
 }
