@@ -130,8 +130,7 @@ func geocodeAddress(address string) (string, error) {
 	return result, nil
 }
 
-// func to UnmarshalJSON from any struct with send url and any
-// return error for has any error
+
 
 func GetanyStruct(url string, result interface{}) error {
 	response, err := http.Get(url)
