@@ -57,11 +57,12 @@ async function fetchLocation(index) {
     // Create an <a> element
     const link = document.createElement('a');
     link.href = result; // Set the href attribute to the URL or location you receive
-    link.textContent = 'View Location'; // Set the text or HTML content of the link
+    link.textContent = 'View Location >'; // Set the text or HTML content of the link
     link.style.display = 'block'; // Optional: make the link appear as a block element
-    link.style.width = '97%'; // Optional: set width if needed
+    // link.style.width = '97%'; // Optional: set width if needed
     link.style.textAlign = 'center'; // Optional: center the text if needed
-    link.style.border = '0'; // Optional: remove border if applicable
+    // link.style.border = '0'; // Optional: remove border if applicable
+    link.classList.add("href-location")
 
     listElement.appendChild(link);
     console.log(link);

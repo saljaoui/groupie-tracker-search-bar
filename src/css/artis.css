@@ -37,7 +37,25 @@ body {
   overflow: hidden;
   animation: transitions 0.75s;
 }
-
+a.href-location {
+  margin-top: 13px;
+  border-radius: 10px;
+  color: var(--load-more-color);
+  background: var(--card-second-color);
+  width: max-content;
+  padding: 10px;
+}
+select#locationSelect {
+  margin-top: 15px;
+  background: var(--card-second-color);
+  border-radius: 10px;
+  width: 22%;
+  height: 5vh;
+  font-size: 18px;
+  font-weight: 900;
+  color: white;
+  margin-bottom: 24px;
+}
 @keyframes transitions {
   from {
     opacity: 0;
