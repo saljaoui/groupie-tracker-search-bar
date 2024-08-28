@@ -4,7 +4,23 @@
   box-sizing: border-box;
   font-family: "poppins";
 }
-
+.button {
+  width: 100%;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: 700;
+  font-family: Helvetica, "sans-serif";
+  transition: all .2s;
+  padding: 6px 0px;
+  border-radius: 102px;
+  background: white;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  position: relative;
+  top: -38px;
+}
 .page_404 {
   padding: 40px 0;
   background: #fff;
