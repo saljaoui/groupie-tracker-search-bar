@@ -17,6 +17,7 @@ async function fetchLocation(index) {
     link.style.display = 'block'; 
     link.style.textAlign = 'center'; 
     link.classList.add("href-location")
+    link.target="_blank"
 
     listElement.appendChild(link);
     console.log(link);
