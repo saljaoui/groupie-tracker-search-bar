@@ -1,6 +1,6 @@
 package Groupie_tracker
 
-// structs for artist jeson data 
+// structs for artist jeson data
 type JsonData struct {
 	Id           int      `json:"id"`
 	Image        string   `json:"image"`
@@ -13,7 +13,7 @@ type JsonData struct {
 	Relations    string   `json:"relations"`
 }
 
-// struct for artist jeson data 
+// struct for artist jeson data
 type Artist struct {
 	ID             int                 `json:"id"`
 	Image          string              `json:"image"`
@@ -24,11 +24,10 @@ type Artist struct {
 	FirstAlbum     string              `json:"firstAlbum"`
 	Date           []string            `json:"dates"`
 	Location       []string
-	Url			   []string
-
+	Url            []string
 }
 
-// struct for Location jeson data 
+// struct for Location jeson data
 type Location struct {
 	Location []string `json:"locations"`
 }
@@ -48,6 +47,11 @@ type Errors struct {
 	Message     string
 	Code        int
 	Description string
+}
+
+type GeocodeResponse struct {
+	Lat string `json:"lat"`
+	Lon string `json:"lon"`
 }
 
 // struct for AllMessageErrors jeson data
