@@ -76,36 +76,31 @@ type GeocodeResponse struct {
 }
 
 func GeoMap(w http.ResponseWriter, r *http.Request) {
-    if r.Method != http.MethodGet {
-        w.WriteHeader(http.StatusMethodNotAllowed)
-        return
-    }
+	if r.Method != http.MethodGet {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
+	indexStr := r.URL.Query().Get("index")
+	index, err := strconv.Atoi(indexStr)
+	if err != nil || index < 0 || index >= len(location.Location) {
+		http.Error(w, "Invalid index", http.StatusBadRequest)
+		return
+	}
+	result, err := geocodeAddress(location.Location[index])
+	if err != nil {
+		http.Error(w, "Error geocoding address", http.StatusInternalServerError)
+		return
+	}
 
-    indexStr := r.URL.Query().Get("index")
-    index, err := strconv.Atoi(indexStr)
-    if err != nil || index < 0 || index >= len(location.Location) {
-        http.Error(w, "Invalid index", http.StatusBadRequest)
-        return
-    }
-
-    result, err := geocodeAddress(location.Location[index])
-    if err != nil {
-        http.Error(w, "Error geocoding address", http.StatusInternalServerError)
-        return
-    }
-
-    w.Header().Set("Content-Type", "application/json")
-    w.WriteHeader(http.StatusOK)
-    json.NewEncoder(w).Encode(result)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(result)
 }
 
 func geocodeAddress(address string) (string, error) {
 	var result string
-
 	encodedAddress := url.QueryEscape(address)
 	url := fmt.Sprintf("https://nominatim.openstreetmap.org/search?format=json&q=%s", encodedAddress)
-	
-
 	resp, err := http.Get(url)
 	if err != nil {
 		return "", err
@@ -124,13 +119,10 @@ func geocodeAddress(address string) (string, error) {
 	if len(results) == 0 {
 		return "", fmt.Errorf("no results found for address: %s", address)
 	}
-
-	result = fmt.Sprintf("https://www.google.com/maps/@%v,%v,7778m/data=!3m1!1e3?entry=ttu&g_ep=EgoyMDI0MDgyMS4wIKXMDSoASAFQAw%3D%3D", results[0].Lat, results[0].Lon)
+	result = fmt.Sprintf("https://www.google.com/maps/place/%v,%v/@%v,%v,7778m/", results[0].Lat, results[0].Lon, results[0].Lat, results[0].Lon)
 
 	return result, nil
 }
-
-
 
 func GetanyStruct(url string, result interface{}) error {
 	response, err := http.Get(url)
