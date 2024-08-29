@@ -41,7 +41,28 @@ body {
 a {
   text-decoration: none;
 }
+/* search style */
+.search{
+    color: white;
+    padding: 5px;
+    background: transparent;
+    border: 2px solid var(--search-border-color);
+    border-radius: 7px;
+    outline: none;
 
+}
+
+.icons {
+  color: var(--search-border-color);
+  margin-left: 10px;
+  font-size: 14px;
+}
+.search-artists {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* end */
 /* Header Styles */
 .header {
   background-color: transparent;
@@ -298,10 +319,10 @@ a {
     font-size: 50%;
   }
 
-  .search-artists {
+  /* .search-artists {
     width: 90%;
     right: 2rem;
-  }
+  } */
 
   .card {
     width: 140px;
@@ -334,10 +355,6 @@ a {
     height: 1.5rem;
   }
 
-  .search-artists {
-    width: 90%;
-    right: 1rem;
-  }
 
   .card {
     width: 120px;

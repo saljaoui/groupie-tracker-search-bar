@@ -26,19 +26,29 @@
             <nav class="navbar">
                 <a href="#home">home</a>
                 <a href="#about">about</a>
-                <a href="#artists">artists</a>
+                <a href="#artists" >artists</a>
                 <a href="#contact">contcat</a>
-
             </nav>
+            
+            <div class="search-artists">
+            <form action="/search" method="GET">
+                <input list="cars" id="carsInput" class="search" name="search"/>
+                <datalist id="cars"  >
+                    {{range .}}
+                    <option value="{{.Name}}">{{.Name}}</option>
+                    {{end}}
+                </datalist>
+                <!-- <input type="search" id="search-box" placeholder="Search..." name="search" id="artist-search">  -->
+                <!-- <input type="submit"> -->
+            </form>
             <div class="icons">
+                <div class="fas fa-search" id="search-btn"></div>
             </div>
     </header>
     <section class="home" id="home">
         <img src="https://i.ibb.co/Hdt5MKg/back1.png" alt="s" id="imag"
             class="background-image">
-
         <h3 id="text">GROUPIE TRACKER</h3>
-
     </section>
 
     <section class="about" id="about">
@@ -61,8 +71,7 @@
 
             <div class="section">
                 <form action="/" method="post">
-                   <section class="artists" id="artists">
-   
+                   <section class="artists" id="artists" >
                        <div class="cards">
                            <h2 class="titleart">Artists</h2>
                            {{range .}}
@@ -80,7 +89,6 @@
    
                    </section>
                    <section class="contact" id="contact">
-   
                        <nav class="navbar">
                            <a href="#home">home</a>
                            <a href="#about">about</a>
