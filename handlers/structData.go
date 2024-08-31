@@ -12,6 +12,11 @@ type JsonData struct {
 	ConcertDates string   `json:"concertDates"`
 	Relations    string   `json:"relations"`
 }
+type SearchResult struct {
+	Id   int    `json:"id"`
+	Text string `json:"text"`
+	Type string `json:"type"`
+}
 
 // struct for artist jeson data
 type Artist struct {

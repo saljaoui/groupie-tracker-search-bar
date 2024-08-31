@@ -2,20 +2,18 @@ package Groupie_tracker
 
 import (
 	"bytes"
-	"fmt"
+	"encoding/json"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 	"text/template"
 )
 
-type ArtistWithLocation struct {
-	JsonData interface{}
-}
-
 var (
 	tmpl   *template.Template
 	errors AllMessageErrors
+	date   []Artist
 )
 
 // Initialize the global template variable
@@ -26,39 +24,44 @@ func init() {
 
 // This function is responsible for handling the root path ("/") of the application.
 func GetDataFromJson(w http.ResponseWriter, r *http.Request) {
-	query := r.FormValue("search")
-	if query != "" {
-		HandleSearch(w, r)
-	} else {
-
-		//	fmt.Println(query)
-		if r.Method != http.MethodGet {
-			HandleErrors(w, errors.MethodNotAllowed, errors.DescriptionMethodNotAllowed, http.StatusMethodNotAllowed)
-			return
-		}
-		if r.URL.Path != "/" {
-			HandleErrors(w, errors.NotFound, errors.DescriptionNotFound, http.StatusNotFound)
-			return
-		}
-
-		artisData, errs := GetArtistsDataStruct()
-		if errs != nil {
-			HandleErrors(w, errors.BadRequest, errors.DescriptionBadRequest, http.StatusBadRequest)
-			return
-		}
-		var buf bytes.Buffer
-		err := tmpl.ExecuteTemplate(&buf, "index.html", artisData)
-		if err != nil {
-			HandleErrors(w, errors.InternalError, errors.DescriptionInternalError, http.StatusInternalServerError)
-			return
-		}
-		_, erro := buf.WriteTo(w)
-		if erro != nil {
-			HandleErrors(w, errors.InternalError, errors.DescriptionInternalError, http.StatusInternalServerError)
-			return
-		}
+	if r.Method != http.MethodGet {
+		HandleErrors(w, errors.MethodNotAllowed, errors.DescriptionMethodNotAllowed, http.StatusMethodNotAllowed)
+		return
 	}
-	// HandleSearch(w, r)
+	if r.URL.Path != "/" {
+		HandleErrors(w, errors.NotFound, errors.DescriptionNotFound, http.StatusNotFound)
+		return
+	}
+
+	artisData, errs := GetArtistsDataStruct()
+	if errs != nil {
+		HandleErrors(w, errors.BadRequest, errors.DescriptionBadRequest, http.StatusBadRequest)
+		return
+	}
+	var buf bytes.Buffer
+
+	err := tmpl.ExecuteTemplate(&buf, "index.html", artisData)
+	if err != nil {
+		HandleErrors(w, errors.InternalError, errors.DescriptionInternalError, http.StatusInternalServerError)
+		return
+	}
+	_, err = buf.WriteTo(w)
+	if err != nil {
+		HandleErrors(w, errors.InternalError, errors.DescriptionInternalError, http.StatusInternalServerError)
+		return
+	}
+}
+
+func GetDataHandler(w http.ResponseWriter, r *http.Request) {
+	query := r.URL.Query().Get("q")
+	artisData, errs := GetArtistsDataStruct()
+	if errs != nil {
+		HandleErrors(w, errors.BadRequest, errors.DescriptionBadRequest, http.StatusBadRequest)
+		return
+	}
+	result := Search_data(query, artisData)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(result)
 }
 
 // This function is responsible for handling the individual artist's information page.
@@ -129,23 +132,12 @@ func HandleErrors(w http.ResponseWriter, message, description string, code int) 
 // func Sreash
 
 func HandleSearch(w http.ResponseWriter, r *http.Request) {
-	query := r.FormValue("search")
-	// fmt.Println(query)
-	artisData, err := GetArtistsDataStruct()
+	query := r.URL.Query().Get("q")
+	artists, err := GetArtistsDataStruct()
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Error To Get Data %v", err), http.StatusInternalServerError)
+		log.Fatal(err)
 	}
-	result := Search_data(query, artisData)
-	var buf bytes.Buffer
-	err = tmpl.ExecuteTemplate(&buf, "index.html", result)
-	if err != nil {
-		HandleErrors(w, errors.InternalError, errors.DescriptionInternalError, http.StatusInternalServerError)
-		return
-	}
-	fmt.Println(w)
-	_, erro := buf.WriteTo(w)
-	if erro != nil {
-		HandleErrors(w, errors.InternalError, errors.DescriptionInternalError, http.StatusInternalServerError)
-		return
-	}
+	results := Search_data(query, artists)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(results)
 }
