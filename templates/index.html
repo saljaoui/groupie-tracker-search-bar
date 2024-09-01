@@ -27,10 +27,8 @@
         </nav>
 
         <div class="search-artists">
-            <form action="/search" method="GET" id="search-form">
-                <input list="suggestions" id="search" class="search" autocomplete="off" placeholder="Search...">
-                <datalist id="suggestions"></datalist>
-            </form>
+            <input list="suggestions" id="search" class="search" autocomplete="off" placeholder="Search...">
+            <datalist id="suggestions"></datalist>
             <div class="icons">
                 <div class="fas fa-search" id="search-btn"></div>
             </div>
@@ -120,21 +118,39 @@
 
 </html>
 <script>
-      document.getElementById('search').addEventListener('input', function () {
-        const query = this.value;
+    document.getElementById('search').addEventListener('input', function () {
+        const datalist = document.getElementById('suggestions');
+        datalist.innerHTML = '';
+        const container = document.querySelector('.cards');
+        container.innerHTML = '';
+        let content = '<h2 class="titleart">Artists</h2>';
+        window.location.href = 'http://localhost:8091/#artists';
+        this.focus();
+        const query = this.value.split(' -')[0];
         if (query.length > 0) {
             fetch(`/search?q=${query}`)
                 .then(response => response.json())
                 .then(data => {
-                    const datalist = document.getElementById('suggestions');
-                    datalist.innerHTML = '';
-                    data.forEach(item => {
-                        const option = document.createElement('option');
-                        option.value = item.text;
-                        datalist.appendChild(option);
-                        console.log(item)
-                    });
+                    if (data && Array.isArray(data)) {
+                        data.forEach(item => {
+                            const option = document.createElement('option');
+                            option.value = item.text;
+                            option.setAttribute("date-id",item.id)
+                            datalist.appendChild(option);
+                                console.log(item.name,item.text.split(' -')[0]);
+                                content += `+
+                                <div class="card">
+                                    <a href="/Artist/${item.id}" class="card-link">
+                                        <div class="blob"></div>
+                                    <img class="img" src="${item.image}">
+                                        <h2 class="names">${item.name}</h2>
+                                    </a>
+                                </div>`;
+                        });
+                        container.innerHTML = content;
+                    }
                 });
         }
     });
+    
 </script>

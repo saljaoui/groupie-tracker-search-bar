@@ -52,18 +52,6 @@ func GetDataFromJson(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetDataHandler(w http.ResponseWriter, r *http.Request) {
-	query := r.URL.Query().Get("q")
-	artisData, errs := GetArtistsDataStruct()
-	if errs != nil {
-		HandleErrors(w, errors.BadRequest, errors.DescriptionBadRequest, http.StatusBadRequest)
-		return
-	}
-	result := Search_data(query, artisData)
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(result)
-}
-
 // This function is responsible for handling the individual artist's information page.
 func HandlerShowRelation(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
@@ -123,10 +111,7 @@ func HandleErrors(w http.ResponseWriter, message, description string, code int) 
 		Code:        code,
 	}
 	w.WriteHeader(code)
-	err := tmpl.ExecuteTemplate(w, "errors.html", errorsMessage)
-	if err != nil {
-		http.Error(w, "Error 500 Internal Server Error", http.StatusInternalServerError)
-	}
+	tmpl.ExecuteTemplate(w, "errors.html", errorsMessage)
 }
 
 // func Sreash

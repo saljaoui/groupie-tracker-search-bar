@@ -49,7 +49,7 @@ func FetchDataRelationFromId(id string) (Artist, error) {
 	if err != nil {
 		return Artist{}, fmt.Errorf("error fetching data from artist data: %w", err)
 	}
-
+	
 	err = GetanyStruct(url+"/locations/"+id, &location)
 	if err != nil {
 		return Artist{}, fmt.Errorf("error fetching data from locations data: %w", err)

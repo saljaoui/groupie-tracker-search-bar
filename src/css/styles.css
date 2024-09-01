@@ -49,7 +49,7 @@ a {
     border: 2px solid var(--search-border-color);
     border-radius: 7px;
     outline: none;
-
+    width: 17pc;
 }
 
 .icons {

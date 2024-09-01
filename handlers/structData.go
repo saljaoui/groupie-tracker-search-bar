@@ -13,9 +13,11 @@ type JsonData struct {
 	Relations    string   `json:"relations"`
 }
 type SearchResult struct {
-	Id   int    `json:"id"`
-	Text string `json:"text"`
-	Type string `json:"type"`
+	Id    int    `json:"id"`
+	Text  string `json:"text"`
+	Type  string `json:"type"`
+	Image string `json:"image"`
+	Name  string `json:"name"`
 }
 
 // struct for artist jeson data
@@ -29,12 +31,16 @@ type Artist struct {
 	FirstAlbum     string              `json:"firstAlbum"`
 	Date           []string            `json:"dates"`
 	Location       []string
-	Url            []string
 }
 
 // struct for Location jeson data
+type Filter struct {
+	Index []Location `json:"index"`
+}
 type Location struct {
+	ID       int      `json:"id"`
 	Location []string `json:"locations"`
+	Image    string   `json:"image"`
 }
 
 // struct for Date jeson data
