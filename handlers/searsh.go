@@ -18,6 +18,7 @@ func Search_data(search string, artists []JsonData) []SearchResult {
 	}
 	searchLower := strings.ToLower(search)
 	for _, artist := range artists {
+		
 		if strings.Contains(strings.ToLower(artist.Name), searchLower) {
 			result = append(result, SearchResult{
 				Id:    artist.Id,
