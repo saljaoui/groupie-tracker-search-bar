@@ -3,6 +3,7 @@ package Groupie_tracker
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -13,7 +14,6 @@ import (
 var (
 	tmpl   *template.Template
 	errors AllMessageErrors
-	date   []Artist
 )
 
 // Initialize the global template variable
@@ -86,6 +86,11 @@ func HandlerShowRelation(w http.ResponseWriter, r *http.Request) {
 
 // This function is responsible for serving the CSS files for the application.
 func HandleStyle(w http.ResponseWriter, r *http.Request) {
+	defer func() {
+		if err := recover(); err != nil {
+			HandleErrors(w, errors.NotFound, errors.DescriptionNotFound, http.StatusNotFound)
+		}
+	}()
 	path := r.URL.Path[len("/styles"):]
 
 	fullpath := filepath.Join("src", path)
@@ -110,8 +115,12 @@ func HandleErrors(w http.ResponseWriter, message, description string, code int) 
 		Description: description,
 		Code:        code,
 	}
+
 	w.WriteHeader(code)
-	tmpl.ExecuteTemplate(w, "errors.html", errorsMessage)
+	err := tmpl.ExecuteTemplate(w, "errors.html", errorsMessage)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
 // func Sreash

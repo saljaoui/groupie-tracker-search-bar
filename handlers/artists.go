@@ -7,8 +7,6 @@ import (
 	"strings"
 )
 
-
-
 // func to Get All data From json
 func GetArtistsDataStruct() ([]JsonData, error) {
 	var artistData []JsonData
@@ -27,8 +25,14 @@ func GetArtistsDataStruct() ([]JsonData, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error fetching data from artist data: %v", err)
 	}
-
-	return artistData, nil
+	newArtistData := []JsonData{}
+	for _, item := range artistData {
+		if item.Id == 21 {
+			item.Image = "https://cdns-images.dzcdn.net/images/cover/d9e62ac265485ebaf1205144e3996083/1900x1900-000000-80-0-0.jpg"
+		}
+		newArtistData = append(newArtistData, item)
+	}
+	return newArtistData, nil
 }
 
 // / func to fetching data from any struct and return Struct Artist with Id user
@@ -49,7 +53,7 @@ func FetchDataRelationFromId(id string) (Artist, error) {
 	if err != nil {
 		return Artist{}, fmt.Errorf("error fetching data from artist data: %w", err)
 	}
-	
+
 	err = GetanyStruct(url+"/locations/"+id, &location)
 	if err != nil {
 		return Artist{}, fmt.Errorf("error fetching data from locations data: %w", err)
@@ -62,9 +66,10 @@ func FetchDataRelationFromId(id string) (Artist, error) {
 	}
 	artist.Location = location.Location
 	artist.Date = date.Date
-
 	artist.DatesLocations = formatLocations(relation.DatesLocations)
-
+	if artist.ID == 21 {
+		artist.Image = "https://cdns-images.dzcdn.net/images/cover/d9e62ac265485ebaf1205144e3996083/1900x1900-000000-80-0-0.jpg"
+	}
 	return artist, nil
 }
 
