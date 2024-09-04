@@ -136,11 +136,12 @@
                 .then(data => {
                     if (data && Array.isArray(data)) {
                         data.forEach(item => {
-                            if (!uniqueName.has(item.text)) {
+                            console.log(uniqueName);
+                             if (!uniqueName.has(item.text)) {
                                 uniqueName.add(item.text);
                                 const option = document.createElement('option');
                                 option.value = item.text;
-                                 datalist.appendChild(option);
+                                datalist.appendChild(option);
                             }
                             if (!uniqueIds.has(item.id)) {
                                 uniqueIds.add(item.id);

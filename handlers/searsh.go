@@ -81,16 +81,15 @@ func Search_data(search string, artists []JsonData) []SearchResult {
 		}
 	}
 
-	mak := make(map[string]bool)
-	newSlice := []SearchResult{}
-	for _, item := range result {
-		if !mak[item.Name] {
-			mak[item.Name] = true
-			newSlice = append(newSlice, item)
-		}
-	}
-
-	return newSlice
+	// mak := make(map[string]bool)
+	// newSlice := []SearchResult{}
+	// for _, item := range result {
+	// 	if !mak[item.Name] {
+	// 		mak[item.Name] = true
+	// 		newSlice = append(newSlice, item)
+	// 	}
+	// }
+	return result
 }
 
 func FilterLocation() ([]Location, error) {
