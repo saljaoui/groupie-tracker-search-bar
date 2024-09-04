@@ -18,7 +18,7 @@ func Search_data(search string, artists []JsonData) []SearchResult {
 	}
 	searchLower := strings.ToLower(search)
 	for _, artist := range artists {
-		
+
 		if strings.Contains(strings.ToLower(artist.Name), searchLower) {
 			result = append(result, SearchResult{
 				Id:    artist.Id,
@@ -68,25 +68,24 @@ func Search_data(search string, artists []JsonData) []SearchResult {
 	}
 	for _, item := range location {
 		for _, loc := range item.Location {
-			if strings.Contains(loc, search) {
-				artist, exists := artistMap[item.ID]
-				if exists {
-					result = append(result, SearchResult{
-						Id:    item.ID,
-						Text:  loc + " -Location",
-						Type:  "Location",
-						Image: artist.Image,
-						Name:  artist.Name,
-					})
-				}
+			if strings.Contains(strings.ToLower(loc), searchLower) {
+				artist := artistMap[item.ID]
+				result = append(result, SearchResult{
+					Id:    item.ID,
+					Text:  loc + " -Location",
+					Type:  "Location",
+					Image: artist.Image,
+					Name:  artist.Name,
+				})
 			}
 		}
 	}
-	mak := make(map[int]bool)
+
+	mak := make(map[string]bool)
 	newSlice := []SearchResult{}
 	for _, item := range result {
-		if !mak[item.Id] {
-			mak[item.Id] = true
+		if !mak[item.Name] {
+			mak[item.Name] = true
 			newSlice = append(newSlice, item)
 		}
 	}

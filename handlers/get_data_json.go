@@ -92,15 +92,13 @@ func HandleStyle(w http.ResponseWriter, r *http.Request) {
 		}
 	}()
 	path := r.URL.Path[len("/styles"):]
-
 	fullpath := filepath.Join("src", path)
 	fileinfo, err := os.Stat(fullpath)
 	if err != nil {
 		HandleErrors(w, errors.NotFound, errors.DescriptionNotFound, http.StatusNotFound)
 		return
 	}
-
-	if !os.IsNotExist(err) && !fileinfo.IsDir() {
+	if !fileinfo.IsDir() {
 		http.StripPrefix("/styles", http.FileServer(http.Dir("src"))).ServeHTTP(w, r)
 	} else {
 		HandleErrors(w, errors.NotFound, errors.DescriptionNotFound, http.StatusNotFound)

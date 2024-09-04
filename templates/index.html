@@ -16,9 +16,9 @@
 
 <body>
     <header class="header">
-
-        <img src="styles/img/soufian_icon.png" alt class="logoSA">
-
+    <form action="/" >
+       <a href="/"> <img src="styles/img/soufian_icon.png" alt class="logoSA"></a>
+    </form>
         <nav class="navbar">
             <a href="#home">home</a>
             <a href="#about">about</a>
@@ -28,7 +28,8 @@
 
         <div class="search-artists">
             <input list="suggestions" id="search" class="search" autocomplete="off" placeholder="Search...">
-            <datalist id="suggestions"></datalist>
+            <datalist id="suggestions">
+            </datalist>
             <div class="icons">
                 <div class="fas fa-search" id="search-btn"></div>
             </div>
@@ -127,25 +128,31 @@
         window.location.href = 'http://localhost:8091/#artists';
         this.focus();
         const query = this.value.split(' -')[0];
+        const uniqueIds = new Set();
+        const uniqueName = new Set();
         if (query.length > 0) {
             fetch(`/search?q=${query}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data && Array.isArray(data)) {
                         data.forEach(item => {
-                            const option = document.createElement('option');
-                            option.value = item.text;
-                            option.setAttribute("date-id",item.id)
-                            datalist.appendChild(option);
-                                console.log(item.name,item.text.split(' -')[0]);
-                                content += `+
-                                <div class="card">
-                                    <a href="/Artist/${item.id}" class="card-link">
-                                        <div class="blob"></div>
-                                    <img class="img" src="${item.image}">
-                                        <h2 class="names">${item.name}</h2>
-                                    </a>
-                                </div>`;
+                            if (!uniqueName.has(item.text)) {
+                                uniqueName.add(item.text);
+                                const option = document.createElement('option');
+                                option.value = item.text;
+                                 datalist.appendChild(option);
+                            }
+                            if (!uniqueIds.has(item.id)) {
+                                uniqueIds.add(item.id);
+                                    content += `+
+                                        <div class="card">
+                                            <a href="/Artist/${item.id}" class="card-link">
+                                                <div class="blob"></div>
+                                            <img class="img" src="${item.image}">
+                                                <h2 class="names">${item.name}</h2>
+                                            </a>
+                                        </div>`;
+                            }
                         });
                         container.innerHTML = content;
                     }
