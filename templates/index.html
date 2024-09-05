@@ -122,7 +122,7 @@
 <script>
     document.getElementById('search').addEventListener('input', function () {
         const datalist = document.getElementById('suggestions');
-        datalist.innerHTML = '';
+        
         const container = document.querySelector('.cards');
         container.innerHTML = '';
         let content = '<h2 class="titleart">Artists</h2>';
@@ -136,13 +136,14 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data && Array.isArray(data)) {
+                        datalist.innerHTML = '';
                         data.forEach(item => {
-                            console.log(uniqueName);
-                             if (!uniqueName.has(item.text)) {
-                                uniqueName.add(item.text);
+                             if (!uniqueName.has(item.name.toLowerCase())) {
+                                uniqueName.add(item.text.toLowerCase());
                                 const option = document.createElement('option');
                                 option.value = item.text;
                                 datalist.appendChild(option);
+                               
                             }
                             if (!uniqueIds.has(item.id)) {
                                 uniqueIds.add(item.id);
