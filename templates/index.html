@@ -128,7 +128,7 @@
         let content = '<h2 class="titleart">Artists</h2>';
         window.location.href = 'http://localhost:8091/#artists';
         this.focus();
-        const query = this.value.split(' -')[0];
+        const query = this.value;
         const uniqueIds = new Set();
         const uniqueName = new Set();
         if (query.length > 0) {
@@ -138,13 +138,14 @@
                     if (data && Array.isArray(data)) {
                         datalist.innerHTML = '';
                         data.forEach(item => {
-                             if (!uniqueName.has(item.name.toLowerCase())) {
+                             if (!uniqueName.has(item.text.toLowerCase())) {
                                 uniqueName.add(item.text.toLowerCase());
                                 const option = document.createElement('option');
                                 option.value = item.text;
                                 datalist.appendChild(option);
                                
                             }
+                            
                             if (!uniqueIds.has(item.id)) {
                                 uniqueIds.add(item.id);
                                     content += `+
@@ -156,6 +157,7 @@
                                             </a>
                                         </div>`;
                             }
+
                         });
                         container.innerHTML = content;
                     }

@@ -12,15 +12,13 @@ import (
 func Search_data(search string, artists []JsonData) []SearchResult {
 	var result []SearchResult
 	artistMap := make(map[int]JsonData)
-
+	fmt.Println(search)
 	for _, artist := range artists {
 		artistMap[artist.Id] = artist
 	}
-	searchLower := strings.ToLower(search)
+	searchLower := strings.ToLower(strings.Split(search, " -")[0])
 	for _, artist := range artists {
-		// switch log:artist{
-		// case a:
-		// }
+
 		if strings.Contains(strings.ToLower(artist.Name), searchLower) {
 			result = append(result, SearchResult{
 				Id:    artist.Id,
@@ -70,7 +68,7 @@ func Search_data(search string, artists []JsonData) []SearchResult {
 	}
 	for _, item := range location {
 		for _, loc := range item.Location {
-			if strings.Contains(loc, search) {
+			if strings.Contains(strings.ToLower(loc), searchLower) {
 				artist := artistMap[item.ID]
 				result = append(result, SearchResult{
 					Id:    item.ID,
@@ -82,15 +80,6 @@ func Search_data(search string, artists []JsonData) []SearchResult {
 			}
 		}
 	}
-
-	// mak := make(map[string]bool)
-	// newSlice := []SearchResult{}
-	// for _, item := range result {
-	// 	if !mak[item.Name] {
-	// 		mak[item.Name] = true
-	// 		newSlice = append(newSlice, item)
-	// 	}
-	// }
 	return result
 }
 
