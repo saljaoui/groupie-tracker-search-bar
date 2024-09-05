@@ -12,13 +12,11 @@ import (
 func Search_data(search string, artists []JsonData) []SearchResult {
 	var result []SearchResult
 	artistMap := make(map[int]JsonData)
-	fmt.Println(search)
 	for _, artist := range artists {
 		artistMap[artist.Id] = artist
 	}
 	searchLower := strings.ToLower(strings.Split(search, " -")[0])
 	for _, artist := range artists {
-
 		if strings.Contains(strings.ToLower(artist.Name), searchLower) {
 			result = append(result, SearchResult{
 				Id:    artist.Id,
@@ -28,6 +26,7 @@ func Search_data(search string, artists []JsonData) []SearchResult {
 				Name:  artist.Name,
 			})
 		}
+
 		creationdate := strconv.Itoa(artist.CreationDate)
 		if strings.Contains(strings.ToLower(creationdate), searchLower) {
 			result = append(result, SearchResult{
@@ -62,6 +61,9 @@ func Search_data(search string, artists []JsonData) []SearchResult {
 		}
 
 	}
+	if search == "Queen -artist/band" {
+		return result
+	} 
 	location, err := FilterLocation()
 	if err != nil {
 		log.Fatal(err)
