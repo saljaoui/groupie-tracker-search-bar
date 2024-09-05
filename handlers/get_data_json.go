@@ -124,6 +124,10 @@ func HandleErrors(w http.ResponseWriter, message, description string, code int) 
 // func Sreash
 
 func HandleSearch(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		HandleErrors(w, errors.MethodNotAllowed, errors.DescriptionMethodNotAllowed, http.StatusMethodNotAllowed)
+		return
+	}
 	query := r.URL.Query().Get("q")
 	artists, err := GetArtistsDataStruct()
 	if err != nil {
