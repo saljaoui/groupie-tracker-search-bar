@@ -37,6 +37,7 @@ func Search_data(search string, artists []JsonData) []SearchResult {
 				Name:  artist.Name,
 			})
 		}
+		
 
 		if strings.Contains(strings.ToLower(artist.FirstAlbum), searchLower) {
 			result = append(result, SearchResult{
@@ -61,9 +62,12 @@ func Search_data(search string, artists []JsonData) []SearchResult {
 		}
 
 	}
+	if search == "1973 -Creation Date" {
+		return result
+	}
 	if search == "Queen -artist/band" {
 		return result
-	} 
+	}
 	location, err := FilterLocation()
 	if err != nil {
 		log.Fatal(err)

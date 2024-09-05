@@ -120,49 +120,72 @@
 
 </html>
 <script>
-    document.getElementById('search').addEventListener('input', function () {
-        const datalist = document.getElementById('suggestions');
-        
-        const container = document.querySelector('.cards');
-        container.innerHTML = '';
-        let content = '<h2 class="titleart">Artists</h2>';
-        window.location.href = 'http://localhost:8091/#artists';
-        this.focus();
-        const query = this.value;
-        const uniqueIds = new Set();
-        const uniqueName = new Set();
-        if (query.length > 0) {
-            fetch(`/search?q=${query}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data && Array.isArray(data)) {
-                        datalist.innerHTML = '';
-                        data.forEach(item => {
-                             if (!uniqueName.has(item.text.toLowerCase())) {
-                                uniqueName.add(item.text.toLowerCase());
-                                const option = document.createElement('option');
-                                option.value = item.text;
-                                datalist.appendChild(option);
-                               
-                            }
-                            
-                            if (!uniqueIds.has(item.id)) {
-                                uniqueIds.add(item.id);
-                                    content += `+
-                                        <div class="card">
-                                            <a href="/Artist/${item.id}" class="card-link">
-                                                <div class="blob"></div>
-                                            <img class="img" src="${item.image}">
-                                                <h2 class="names">${item.name}</h2>
-                                            </a>
-                                        </div>`;
-                            }
-
-                        });
-                        container.innerHTML = content;
-                    }
-                });
-        }
-    });
+   document.getElementById('search').addEventListener('input', function () {
+    const datalist = document.getElementById('suggestions');
     
+    const container = document.querySelector('.cards');
+    container.innerHTML = '';
+    let content = '<h2 class="titleart">Artists</h2>';
+    window.location.href = 'http://localhost:8091/#artists';
+    this.focus();
+    const query = this.value;
+    const uniqueIds = new Set();
+    const uniqueName = new Set();
+    
+    if (query.length > 0) {
+        fetch(`/search?q=${query}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data && Array.isArray(data)) {
+                    datalist.innerHTML = '';
+
+                    // Separate artist/band and member/location options
+                    const artistBandOptions = [];
+                    const otherOptions = [];
+                    
+                    data.forEach(item => {
+                        const optionText = item.text + " " + item.name;
+                        if (item.type === 'artist/band') {
+                            artistBandOptions.push(optionText);
+                        } else {
+                            otherOptions.push(optionText);
+                        }
+                    });
+
+                    // Combine artist/band options first, then other options
+                    const sortedOptions = artistBandOptions.concat(otherOptions);
+
+                    sortedOptions.forEach(optionText => {
+                        const option = document.createElement('option');
+                        option.value = optionText;
+                        datalist.appendChild(option);
+                        
+                      
+                    });
+                    
+                    // Populate artist cards
+                    data.forEach(item => {
+                          // Redirect to artist page if selected
+                        if (query === item.text + " " + item.name) {
+                            window.location.href = "/Artist/" + item.id;
+                        }
+                        if (!uniqueIds.has(item.id)) {
+                            uniqueIds.add(item.id);
+                            content += `
+                                <div class="card">
+                                    <a href="/Artist/${item.id}" class="card-link">
+                                        <div class="blob"></div>
+                                        <img class="img" src="${item.image}">
+                                        <h2 class="names">${item.name}</h2>
+                                    </a>
+                                </div>`;
+                        }
+                    });
+                    
+                    container.innerHTML = content;
+                }
+            });
+    }
+});
+
 </script>
